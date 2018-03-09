@@ -1,1 +1,1 @@
-To run this, run the command `npm run start`
+To run this application, run the command `npm run start`
