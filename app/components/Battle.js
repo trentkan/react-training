@@ -92,7 +92,7 @@ class Battle extends React.Component {
   }
 
   render() {
-    const { playerONeName, playerOneImage, playerTwoName, playerTwoImage } = this.state
+    const { playerOneName, playerOneImage, playerTwoName, playerTwoImage } = this.state
 
     const { match } = this.props;
 
