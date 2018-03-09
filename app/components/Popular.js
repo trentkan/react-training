@@ -1,7 +1,7 @@
-const React = require('react');
-const PropTypes = require('prop-types');
-const api = require('../utils/api');
-const Loading = require('./Loading');
+import React from 'react';
+import PropTypes from 'prop-types';
+import { fetchPopularRepos } from '../utils/api';
+import Loading from './Loading';
 
 const SelectLanguage = ({ onSelect, selectedLanguage }) => {
   var languages = ['All', 'JavaScript', 'Ruby', 'Java', 'Css', 'Python'];
@@ -23,7 +23,7 @@ const SelectLanguage = ({ onSelect, selectedLanguage }) => {
 const RepoGrid = ({ repos }) => {
   return (
     <ul className='popular-list'>
-      {repos.map(({html_url, name, owner, stargazers_count}, index) => {(
+      {repos.map(({html_url, name, owner, stargazers_count}, index) => (
         <li key={name} className='popular-item'>
           <div className='popular-rank'>#{index + 1}</div>
           <ul className='space-list-items'>
@@ -39,7 +39,7 @@ const RepoGrid = ({ repos }) => {
             <li>{stargazers_count} stars</li>
           </ul>
         </li>
-      )})}
+      ))}
     </ul>
   )
 }
@@ -73,7 +73,7 @@ class Popular extends React.Component {
       repos: null
     }));
 
-    api.fetchPopularRepos(language)
+    fetchPopularRepos(language)
       .then((repos) => {
         this.setState(() => ({ repos }))
       });
@@ -96,4 +96,4 @@ class Popular extends React.Component {
   }
 }
 
-module.exports = Popular;
+export default Popular;
