@@ -1,49 +1,45 @@
-var React = require('react');
-var PropTypes = require('prop-types');
-var api = require('../utils/api');
-var Loading = require('./Loading');
+import React from 'react';
+import PropTypes from 'prop-types';
+import { fetchPopularRepos } from '../utils/api';
+import Loading from './Loading';
 
-const SelectLanguage = (props) => {
+const SelectLanguage = ({ onSelect, selectedLanguage }) => {
   var languages = ['All', 'JavaScript', 'Ruby', 'Java', 'Css', 'Python'];
 
   return (
     <ul className='languages'>
-      {languages.map((language) => {
-        return (
-          <li
-            style={language === props.selectedLanguage ? { color: '#d0012b'} : null}
-            onClick={props.onSelect.bind(null, language)}
-            key={language}>
+      {languages.map((language) => (
+        <li
+          style={language === selectedLanguage ? { color: '#d0012b'} : null}
+          onClick={() => { onSelect(language) }}
+          key={language}>
             {language}
-          </li>
-        )
-      })}
+        </li>
+      ))}
     </ul>
   )
 }
 
-const RepoGrid = (props) => {
+const RepoGrid = ({ repos }) => {
   return (
     <ul className='popular-list'>
-      {props.repos.map((repo, index) => {
-        return (
-          <li key={repo.name} className='popular-item'>
-            <div className='popular-rank'>#{index + 1}</div>
-            <ul className='space-list-items'>
-              <li>
-                <img
-                  className='avatar'
-                  src={repo.owner.avatar_url}
-                  alt={'Avatar for ' + repo.owner.login}
-                />
-              </li>
-              <li><a href={repo.html_url}>{repo.name}</a></li>
-              <li>@{repo.owner.login}</li>
-              <li>{repo.stargazers_count} stars</li>
-            </ul>
-          </li>
-        )
-      })}
+      {repos.map(({html_url, name, owner, stargazers_count}, index) => (
+        <li key={name} className='popular-item'>
+          <div className='popular-rank'>#{index + 1}</div>
+          <ul className='space-list-items'>
+            <li>
+              <img
+                className='avatar'
+                src={owner.avatar_url}
+                alt={'Avatar for ' + owner.login}
+              />
+            </li>
+            <li><a href={html_url}>{name}</a></li>
+            <li>@{owner.login}</li>
+            <li>{stargazers_count} stars</li>
+          </ul>
+        </li>
+      ))}
     </ul>
   )
 }
@@ -72,21 +68,15 @@ class Popular extends React.Component {
   }
 
   updateLanguage(language) {
-    this.setState(() => {
-      return {
-        selectedLanguage: language,
-        repos: null
-      }
-    });
+    this.setState(() => ({
+      selectedLanguage: language,
+      repos: null
+    }));
 
-    api.fetchPopularRepos(language)
+    fetchPopularRepos(language)
       .then((repos) => {
-        this.setState(() => {
-          return {
-            repos: repos
-          }
-        })
-      }, this);
+        this.setState(() => ({ repos }))
+      });
   }
 
   render() {
@@ -106,4 +96,4 @@ class Popular extends React.Component {
   }
 }
 
-module.exports = Popular;
+export default Popular;
